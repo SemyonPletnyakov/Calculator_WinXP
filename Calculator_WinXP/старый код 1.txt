@@ -1,0 +1,454 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing.Text;
+
+namespace WordPad_XP
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            System.Drawing.Text.InstalledFontCollection fonts = new System.Drawing.Text.InstalledFontCollection();
+            foreach (FontFamily font in fonts.Families)
+            {
+                FontList.Items.Add(font.Name);
+            }
+            FontList.SelectedItem = "Arial";
+
+            FontSizeList.Items.Add(8);
+            FontSizeList.Items.Add(9);
+            FontSizeList.Items.Add(10);
+            FontSizeList.Items.Add(11);
+            FontSizeList.Items.Add(12);
+            FontSizeList.Items.Add(14);
+            FontSizeList.Items.Add(16);
+            FontSizeList.Items.Add(18);
+            FontSizeList.Items.Add(20);
+            FontSizeList.Items.Add(22);
+            FontSizeList.Items.Add(24);
+            FontSizeList.Items.Add(26);
+            FontSizeList.Items.Add(28);
+            FontSizeList.Items.Add(36);
+            FontSizeList.Items.Add(48);
+            FontSizeList.Items.Add(72);
+            FontSizeList.SelectedItem = 10;
+
+            richTextBox1.SelectionFont = new Font("Arial", 10, FontStyle.Regular);
+        }
+        Font cursorFont = new Font("Arial", 10);
+        int size123 = 20;
+        string name123 = "Arial";
+        bool NameFontFor = false;
+        bool SizeFontFor = false;
+        private void Selected_FontList(object sender, EventArgs e)
+        {
+            ToolStripComboBox tscb = (ToolStripComboBox)sender;
+            
+            /*if (richTextBox1.SelectionFont != null && !NameFontFor)
+            {
+                richTextBox1.SelectionFont = new Font(tscb.Text, richTextBox1.SelectionFont.Size, richTextBox1.SelectionFont.Style);
+                cursorFont = new Font(tscb.Text, richTextBox1.SelectionFont.Size, richTextBox1.SelectionFont.Style);
+            }
+            else
+            {*/
+                int selectStart = richTextBox1.SelectionStart;
+                int selectHelper = richTextBox1.SelectionStart;
+                int selectLength = richTextBox1.SelectionLength;
+                if (selectLength > 1)
+                {
+                    name123 = tscb.Text;
+                    NameFontFor = true;
+                }
+            if (!NameFontFor) 
+            {
+                richTextBox1.SelectionFont = new Font(name123, richTextBox1.SelectionFont.Size, richTextBox1.SelectionFont.Style);
+            }
+            else
+            {
+                for (int i = selectHelper; i < selectLength + selectHelper; i++)
+                {
+                    richTextBox1.Select(i, 1);
+                    //richTextBox1.SelectedText = "1";
+                    richTextBox1.SelectionFont = new Font(name123, richTextBox1.SelectionFont.Size, richTextBox1.SelectionFont.Style); //смена шрифта
+                }
+                richTextBox1.Select(selectStart, selectLength);
+                if (selectLength > 1)
+                {
+                    NameFontFor = false;
+                }
+            }
+            //}
+        }
+
+
+
+        private void Selected_FontSizeList(object sender, EventArgs e)
+        {
+            ToolStripComboBox tscb = (ToolStripComboBox)sender;
+            
+            /*if (richTextBox1.SelectionFont != null && !SizeFontFor)
+            {
+                richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, Convert.ToInt32(tscb.Text), richTextBox1.SelectionFont.Style);
+                cursorFont = new Font(richTextBox1.SelectionFont.FontFamily, Convert.ToInt32(tscb.Text), richTextBox1.SelectionFont.Style);
+            }
+            else
+            {*/
+            
+            int selectStart = richTextBox1.SelectionStart;
+            int selectHelper = richTextBox1.SelectionStart;
+            int selectLength = richTextBox1.SelectionLength;
+            if(selectLength > 1)
+            {
+                size123 = Convert.ToInt32(tscb.Text);
+                SizeFontFor = true;
+            }
+            if (!SizeFontFor) 
+            {
+                richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, size123, richTextBox1.SelectionFont.Style);
+            }
+            else
+            {
+                for (int i = selectHelper; i < selectLength + selectHelper; i++)
+                {
+                    richTextBox1.Select(i, 1);
+                    //richTextBox1.SelectedText = "1";
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, size123, richTextBox1.SelectionFont.Style); //смена размера шрифта
+                }
+                richTextBox1.Select(selectStart, selectLength);
+                {
+                    SizeFontFor = false;
+                }
+            }
+            //}
+        }
+
+        private void richTextBox1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null && richTextBox1.SelectionFont.Size != 0)
+            {
+                cursorFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, richTextBox1.SelectionFont.Style);
+                FontSizeList.SelectedItem = Convert.ToInt32(richTextBox1.SelectionFont.Size);
+                FontList.SelectedItem = richTextBox1.SelectionFont.FontFamily.Name;
+                if (richTextBox1.SelectionFont.Bold)
+                {
+                    BoldButton.Checked = true;
+                }
+                else
+                {
+                    BoldButton.Checked = false;
+                }
+                if (richTextBox1.SelectionFont.Italic)
+                {
+                    ItalicButton.Checked = true;
+                }
+                else
+                {
+                    ItalicButton.Checked = false;
+                }
+                if (richTextBox1.SelectionFont.Underline)
+                {
+                    UnderlineButton.Checked = true;
+                }
+                else
+                {
+                    UnderlineButton.Checked = false;
+                }
+            }
+            else
+            {
+                FontList.Text = "";
+                FontSizeList.Text = "";
+                BoldButton.Checked = false;
+                ItalicButton.Checked = false;
+                UnderlineButton.Checked = false;
+                /*if (richTextBox1.SelectionFont.Size != null)
+                {
+                    FontSizeList.SelectedItem = Convert.ToInt32(richTextBox1.SelectionFont.Size);
+                }
+                if (richTextBox1.SelectionFont.FontFamily != null)
+                {
+                    FontList.SelectedItem = richTextBox1.SelectionFont.FontFamily.Name;
+                }
+                if (richTextBox1.SelectionFont.Bold)
+                {
+                    BoldButton.Checked = true;
+                }
+                else
+                {
+                    BoldButton.Checked = false;
+                }
+                if (richTextBox1.SelectionFont.Italic)
+                {
+                    ItalicButton.Checked = true;
+                }
+                else
+                {
+                    ItalicButton.Checked = false;
+                }
+                if (richTextBox1.SelectionFont.Underline)
+                {
+                    UnderlineButton.Checked = true;
+                }
+                else
+                {
+                    UnderlineButton.Checked = false;
+                }*/
+
+                /*RichTextBox richTextBoxClone = (RichTextBox)sender;
+
+                bool checkFont = true;
+                bool checkSize = true;
+                bool checkBold = true;
+                bool checkItalic = true;
+                bool checkUnderline = true;
+
+                int selectStart = richTextBox1.SelectionStart;
+                //int selectHelper = richTextBox1.SelectionStart;
+                int selectHelper = 0;
+                int selectLength = richTextBox1.SelectionLength;
+                
+                richTextBoxClone.Select(selectHelper, 1);
+                string fontName1 = richTextBoxClone.SelectionFont.FontFamily.Name;
+                float fontSize1 = richTextBoxClone.SelectionFont.Size;
+                bool fontBold1 = richTextBoxClone.SelectionFont.Bold;
+                bool fontItalic1 = richTextBoxClone.SelectionFont.Italic;
+                bool fontUnderline1 = richTextBoxClone.SelectionFont.Underline;
+                selectHelper++;
+
+                richTextBoxClone.Select(selectHelper, 1);
+                string fontName2 = richTextBoxClone.SelectionFont.FontFamily.Name;
+                float fontSize2 = richTextBoxClone.SelectionFont.Size;
+                bool fontBold2 = richTextBoxClone.SelectionFont.Bold;
+                bool fontItalic2 = richTextBoxClone.SelectionFont.Italic;
+                bool fontUnderline2 = richTextBoxClone.SelectionFont.Underline;
+                selectHelper++;
+
+                if (checkFont)
+                {
+                    if (fontName1 == fontName2) { }
+                    else checkFont = false;
+                }
+                if (checkSize)
+                {
+                    if (fontSize1 == fontSize2) { }
+                    else checkSize = false;
+                }
+                if (checkBold)
+                {
+                    if (fontBold1 == fontBold2) { }
+                    else checkBold = false;
+                }
+                if (checkItalic)
+                {
+                    if (fontItalic1 == fontItalic2) { }
+                    else checkItalic = false;
+                }
+                if (checkUnderline)
+                {
+                    if (fontUnderline1 == fontUnderline2) { }
+                    else checkUnderline = false;
+                }
+
+                for (int i = selectHelper; i < selectLength; i++)
+                {
+                    richTextBox1.Select(selectHelper, 1);
+                    fontName1 = fontName2;
+                    fontSize1 = fontSize2;
+                    fontBold1 = fontBold2;
+                    fontItalic1 = fontItalic2;
+                    fontUnderline1 = fontUnderline2;
+
+                    fontName2 = richTextBoxClone.SelectionFont.FontFamily.Name;
+                    fontSize2 = richTextBoxClone.SelectionFont.Size;
+                    fontBold2 = richTextBoxClone.SelectionFont.Bold;
+                    fontItalic2 = richTextBoxClone.SelectionFont.Italic;
+                    fontUnderline2 = richTextBoxClone.SelectionFont.Underline;
+
+                    if (checkFont)
+                    {
+                        if (fontName1 == fontName2) { }
+                        else checkFont = false;
+                    }
+                    if (checkSize)
+                    {
+                        if (fontSize1 == fontSize2) { }
+                        else checkSize = false;
+                    }
+                    if (checkBold)
+                    {
+                        if (fontBold1 == fontBold2) { }
+                        else checkBold = false;
+                    }
+                    if (checkItalic)
+                    {
+                        if (fontItalic1 == fontItalic2) { }
+                        else checkItalic = false;
+                    }
+                    if (checkUnderline)
+                    {
+                        if (fontUnderline1 == fontUnderline2) { }
+                        else checkUnderline = false;
+                    }
+                }
+                
+                if (checkFont)
+                {
+                    FontList.SelectedItem = richTextBoxClone.SelectionFont.FontFamily.Name;
+                }
+                if (checkSize)
+                {
+                    FontSizeList.SelectedItem = Convert.ToInt32(richTextBoxClone.SelectionFont.Size);
+                }
+                if (checkBold)
+                {
+                    BoldButton.Checked = true;
+                }
+                if (checkItalic)
+                {
+                    ItalicButton.Checked = true;
+                }
+                if (checkUnderline)
+                {
+                    UnderlineButton.Checked = true;
+                }
+                richTextBoxClone.Select(selectStart, selectLength);
+*/
+            }
+        }
+
+
+        private void BoldButton_Click(object sender, EventArgs e)
+        {
+            if (!richTextBox1.SelectionFont.Bold)//если не жирный
+            {
+                if (richTextBox1.SelectionFont.Italic && richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold | FontStyle.Italic | FontStyle.Underline);
+                }
+                else if (richTextBox1.SelectionFont.Italic)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold | FontStyle.Italic);
+                }
+                else if (richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold | FontStyle.Underline);
+                }
+                else
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold);
+                }
+            }
+            else //если жирный
+            {
+                if (richTextBox1.SelectionFont.Italic && richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Italic | FontStyle.Underline);
+                }
+                else if (richTextBox1.SelectionFont.Italic)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Italic);
+                }
+                else if (richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Underline);
+                }
+                else
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Regular);
+                }
+            }
+        }
+
+        private void ItalicButton_Click(object sender, EventArgs e)
+        {
+            if (!richTextBox1.SelectionFont.Italic) //если не курсив
+            { 
+                if(richTextBox1.SelectionFont.Bold && richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Italic | FontStyle.Bold | FontStyle.Underline);
+                }
+                else if (richTextBox1.SelectionFont.Bold)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Italic | FontStyle.Bold);
+                }
+                else if (richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Italic | FontStyle.Underline);
+                }
+                else
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Italic);
+                }
+            }
+            else //если курсив
+            {
+                if (richTextBox1.SelectionFont.Bold && richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold | FontStyle.Underline);
+                }
+                else if (richTextBox1.SelectionFont.Bold)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold);
+                }
+                else if (richTextBox1.SelectionFont.Underline)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Underline);
+                }
+                else
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Regular);
+                }
+            }
+        }
+
+        private void UnderlineButton_Click(object sender, EventArgs e)
+        {
+            if (!richTextBox1.SelectionFont.Underline) //если не подчёркнутый
+            {
+                if(richTextBox1.SelectionFont.Bold && richTextBox1.SelectionFont.Italic)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Underline | FontStyle.Bold | FontStyle.Italic);
+                }
+                else if (richTextBox1.SelectionFont.Bold)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Underline | FontStyle.Bold);
+                }
+                else if (richTextBox1.SelectionFont.Italic)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Underline | FontStyle.Italic);
+                }
+                else
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Underline);
+                }
+            }
+            else //если подчёркнутый
+            {
+                if (richTextBox1.SelectionFont.Bold && richTextBox1.SelectionFont.Italic)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold | FontStyle.Italic);
+                }
+                else if (richTextBox1.SelectionFont.Bold)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Bold);
+                }
+                else if (richTextBox1.SelectionFont.Italic)
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Italic);
+                }
+                else
+                {
+                    richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily, richTextBox1.SelectionFont.Size, FontStyle.Regular);
+                }
+            }
+        }
+    }
+}
